@@ -1,0 +1,209 @@
+// Dayflow HRMS - Unified Production Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// Enums
+// ----------------------------------------------------
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  HALFDAY
+  LEAVE
+}
+
+enum LeaveType {
+  PAID
+  SICK
+  UNPAID
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ----------------------------------------------------
+// 1. User & Authentication (Member 1)
+// ----------------------------------------------------
+
+model User {
+  id          String    @id @default(uuid())
+  name        String
+  email       String    @unique
+  password    String
+  role        Role      @default(EMPLOYEE)
+  employee_id String?   @unique
+  employee    Employee? @relation(fields: [employee_id], references: [employee_id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("users")
+}
+
+// ----------------------------------------------------
+// 2. Employee Profile & Records (Member 2)
+// ----------------------------------------------------
+
+model Employee {
+  employee_id     String          @id
+  name            String
+  email           String          @unique
+  phone           String?
+  address         String?         @db.Text
+  profile_picture String?
+  designation     String
+  department      String
+  joining_date    DateTime
+  salary          Decimal         @db.Decimal(12, 2)
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+
+  user            User?
+  documents       Document[]
+  attendances     Attendance[]
+  leave_requests  LeaveRequest[]
+  leave_balance   LeaveBalance?
+  payroll         Payroll?
+
+  @@index([department])
+  @@index([designation])
+  @@index([name])
+  @@map("employees")
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  employee_id String
+  name        String
+  file_name   String
+  file_url    String
+  file_type   String
+  file_size   Int
+  uploaded_at DateTime @default(now())
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee    Employee @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@index([employee_id])
+  @@map("documents")
+}
+
+// ----------------------------------------------------
+// 3. Attendance Tracking (Member 3)
+// ----------------------------------------------------
+
+model Attendance {
+  id           Int              @id @default(autoincrement())
+  employeeId   String
+  date         DateTime
+  checkIn      DateTime?
+  checkOut     DateTime?
+  status       AttendanceStatus @default(PRESENT)
+  workingHours Float            @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  employee     Employee?        @relation(fields: [employeeId], references: [employee_id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@map("attendances")
+}
+
+// ----------------------------------------------------
+// 4. Leave & Payroll Management (Member 4)
+// ----------------------------------------------------
+
+model LeaveRequest {
+  id             String      @id @default(uuid())
+  employee_id    String
+  employee_name  String
+  employee_email String?
+  leave_type     LeaveType
+  start_date     DateTime
+  end_date       DateTime
+  total_days     Int
+  remarks        String?     @db.Text
+  status         LeaveStatus @default(PENDING)
+  admin_comment  String?     @db.Text
+  approved_by    String?
+  approved_at    DateTime?
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+
+  employee       Employee?   @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@index([employee_id])
+  @@index([status])
+  @@map("leave_requests")
+}
+
+model LeaveBalance {
+  id                String   @id @default(uuid())
+  employee_id       String   @unique
+  paid_leave_total  Int      @default(18)
+  paid_leave_used   Int      @default(0)
+  sick_leave_total  Int      @default(12)
+  sick_leave_used   Int      @default(0)
+  unpaid_leave_used Int      @default(0)
+  updated_at        DateTime @updatedAt
+
+  employee          Employee? @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@map("leave_balances")
+}
+
+model Payroll {
+  id                String          @id @default(uuid())
+  employee_id       String          @unique
+  employee_name     String
+  department        String?
+  designation       String?
+  basic_salary      Decimal         @db.Decimal(12, 2)
+  total_allowances  Decimal         @db.Decimal(12, 2)
+  total_deductions  Decimal         @db.Decimal(12, 2)
+  net_salary        Decimal         @db.Decimal(12, 2)
+  effective_from    DateTime        @default(now())
+  pay_cycle         String          @default("Monthly")
+  payment_status    String          @default("Paid")
+  bank_account_mask String?         @default("•••• •••• •••• 4921")
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
+  paystubs          SalaryPaystub[]
+
+  employee          Employee?       @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@index([employee_id])
+  @@map("payrolls")
+}
+
+model SalaryPaystub {
+  id           String   @id @default(uuid())
+  payroll_id   String
+  employee_id  String
+  month        String
+  amount       Decimal  @db.Decimal(12, 2)
+  status       String   @default("Paid")
+  disbursed_at DateTime @default(now())
+
+  payroll      Payroll  @relation(fields: [payroll_id], references: [id], onDelete: Cascade)
+
+  @@index([employee_id])
+  @@map("salary_paystubs")
+}
+
