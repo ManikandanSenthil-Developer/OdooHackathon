@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dayflow HRMS - Authentication, Authorization & Dashboard Module
 
 > **Dayflow** is a modern Human Resource Management System (HRMS) designed for workforce management, attendance tracking, leave approval workflows, and payroll control.
@@ -227,3 +228,6 @@ To test the application immediately, use the built-in quick demo credentials or 
 - **Header**: `Authorization: Bearer <JWT_TOKEN>`
 - **Access**: `ADMIN` only (Returns `403 Forbidden` for `EMPLOYEE`)
 - **Returns**: Workforce directory, department attendance breakdown, leave approval applications, and payroll overview.
+=======
+# OdooHackathon
+>>>>>>> 2beadd4
