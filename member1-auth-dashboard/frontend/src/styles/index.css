@@ -1,0 +1,330 @@
+/* Dayflow HRMS - Modern SaaS Design System */
+
+:root {
+  --primary-blue: #00ABE4;
+  --primary-blue-hover: #0096C7;
+  --primary-blue-light: rgba(0, 171, 228, 0.12);
+  --light-blue: #E9F1FA;
+  --bg-gradient: linear-gradient(135deg, #F8FAFC 0%, #E9F1FA 100%);
+  --card-bg: #FFFFFF;
+  --dark-text: #1F2937;
+  --muted-text: #6B7280;
+  --light-border: #E5E7EB;
+  --border-focus: #00ABE4;
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --warning: #F59E0B;
+  --warning-bg: #FFFBEB;
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
+  --card-radius: 16px;
+  --button-radius: 12px;
+  --input-radius: 10px;
+  --box-shadow-sm: 0 2px 8px rgba(31, 41, 55, 0.04);
+  --box-shadow-md: 0 10px 30px -5px rgba(0, 171, 228, 0.08);
+  --box-shadow-lg: 0 20px 40px -10px rgba(0, 171, 228, 0.15);
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: #F8FAFC;
+  color: var(--dark-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--dark-text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-blue-hover);
+}
+
+/* Layout Utilities */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--button-radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+.btn-primary {
+  background: var(--primary-blue);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 171, 228, 0.35);
+}
+
+.btn-primary:hover {
+  background: var(--primary-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 171, 228, 0.45);
+}
+
+.btn-secondary {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.btn-secondary:hover {
+  background: #D8E7F8;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.btn-outline:hover {
+  background: var(--primary-blue-light);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+
+.btn-danger:hover {
+  background: #DC2626;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dark-text);
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  border: 1.5px solid var(--light-border);
+  border-radius: var(--input-radius);
+  background-color: #FFFFFF;
+  color: var(--dark-text);
+  transition: var(--transition);
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 4px rgba(0, 171, 228, 0.15);
+}
+
+/* Cards & Panels */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  box-shadow: var(--box-shadow-md);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--box-shadow-lg);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-admin {
+  background-color: #EDE9FE;
+  color: #6D28D9;
+}
+
+.badge-employee {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.badge-success {
+  background-color: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-warning {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+}
+
+.badge-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* Alerts */
+.alert {
+  padding: 14px 18px;
+  border-radius: var(--input-radius);
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert-danger {
+  background-color: var(--danger-bg);
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+}
+
+.alert-success {
+  background-color: var(--success-bg);
+  color: #047857;
+  border: 1px solid #6EE7B7;
+}
+
+/* Table styling */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--light-border);
+  background: #FFFFFF;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  background: var(--light-blue);
+  padding: 14px 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dark-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--light-border);
+  color: var(--dark-text);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background-color: #F8FAFC;
+}
+
+/* Responsive grid system */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-4, .grid-3, .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding: 0 16px;
+  }
+}
