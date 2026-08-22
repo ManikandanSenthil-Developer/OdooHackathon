@@ -1,0 +1,45 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  employee_id     String     @id
+  name            String
+  email           String     @unique
+  phone           String?
+  address         String?
+  profile_picture String?
+  designation     String
+  department      String
+  joining_date    DateTime
+  salary          Decimal
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
+  documents       Document[]
+
+  @@index([department])
+  @@index([designation])
+  @@index([name])
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  employee_id String
+  name        String
+  file_name   String
+  file_url    String
+  file_type   String
+  file_size   Int
+  uploaded_at DateTime @default(now())
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee Employee @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@index([employee_id])
+}
