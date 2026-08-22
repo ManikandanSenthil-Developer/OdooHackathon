@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Dayflow HRMS - Authentication, Authorization & Dashboard Module
 
 > **Dayflow** is a modern Human Resource Management System (HRMS) designed for workforce management, attendance tracking, leave approval workflows, and payroll control.
