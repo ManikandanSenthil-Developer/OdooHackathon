@@ -1,0 +1,99 @@
+// Dayflow HRMS - Module 4: Leave & Payroll Management Prisma Schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum LeaveType {
+  PAID
+  SICK
+  UNPAID
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model LeaveRequest {
+  id             String      @id @default(uuid())
+  employee_id    String
+  employee_name  String
+  employee_email String?
+  leave_type     LeaveType
+  start_date     DateTime
+  end_date       DateTime
+  total_days     Int
+  remarks        String?     @db.Text
+  status         LeaveStatus @default(PENDING)
+  admin_comment  String?     @db.Text
+  approved_by    String?
+  approved_at    DateTime?
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+
+  @@index([employee_id])
+  @@index([status])
+  @@map("leave_requests")
+}
+
+model LeaveBalance {
+  id                String   @id @default(uuid())
+  employee_id       String   @unique
+  paid_leave_total  Int      @default(18)
+  paid_leave_used   Int      @default(0)
+  sick_leave_total  Int      @default(12)
+  sick_leave_used   Int      @default(0)
+  unpaid_leave_used Int      @default(0)
+  updated_at        DateTime @updatedAt
+
+  @@map("leave_balances")
+}
+
+model Payroll {
+  id                String          @id @default(uuid())
+  employee_id       String          @unique
+  employee_name     String
+  department        String?
+  designation       String?
+  basic_salary      Decimal         @db.Decimal(12, 2)
+  total_allowances  Decimal         @db.Decimal(12, 2)
+  total_deductions  Decimal         @db.Decimal(12, 2)
+  net_salary        Decimal         @db.Decimal(12, 2)
+  effective_from    DateTime        @default(now())
+  pay_cycle         String          @default("Monthly")
+  payment_status    String          @default("Paid")
+  bank_account_mask String?         @default("•••• •••• •••• 4921")
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
+  paystubs          SalaryPaystub[]
+
+  @@index([employee_id])
+  @@map("payrolls")
+}
+
+model SalaryPaystub {
+  id           String   @id @default(uuid())
+  payroll_id   String
+  employee_id  String
+  month        String
+  amount       Decimal  @db.Decimal(12, 2)
+  status       String   @default("Paid")
+  disbursed_at DateTime @default(now())
+
+  payroll Payroll @relation(fields: [payroll_id], references: [id], onDelete: Cascade)
+
+  @@index([employee_id])
+  @@map("salary_paystubs")
+}
